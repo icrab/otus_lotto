@@ -220,10 +220,6 @@ class Player():
     def __init__(self):
         self.name = self.set_player_name()
         self.is_human = self.set_is_human_flag()
-        '''
-        self.name = name
-        self.is_human = is_human
-        '''
 
     def set_player_name(self):
         player_number = len(players) + 1
