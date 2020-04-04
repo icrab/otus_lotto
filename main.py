@@ -36,6 +36,8 @@ class Dialog():
 
 
 class Card():
+    '''
+    '''
     def __init__(self):
         self._array = []
         self._card_list = []
@@ -131,6 +133,8 @@ class Card():
 
 
 class Game():
+    '''
+    '''
     def __init__(self):
         self.round = 0
         self._used_kegs = []
