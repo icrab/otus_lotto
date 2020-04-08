@@ -1,15 +1,11 @@
 import random
 
 
-class Dialog():
-    '''Class contains methods
-       to communicate with user'''
+class Dialog:
+    """Class contains methods
+       to communicate with user"""
 
     def input_answer(self, message):
-        '''
-        check and processing
-        answer entered by user
-        '''
         print(message)
         answer = str(input())
         if answer == 'y':
@@ -21,10 +17,6 @@ class Dialog():
             return self.input_answer(message)
 
     def input_int(self, message):
-        '''
-        check and processing
-        input entered by user
-        '''
         print(message)
         try:
             int_input = int(input())
@@ -35,75 +27,74 @@ class Dialog():
         return int_input
 
 
-class Card():
-    '''
-    '''
+class Card:
     def __init__(self):
         self._array = []
-        self._card_list = []
-        self.real_card = []
-        self.sum = 0
+        self.pretty_card = []
 
-        while len(self._array) < 15:
-            num = random.randrange(1, 91, 1)
-            if self._array.count(num) == 0:
-                self._array.append(num)
-                self.__append_num_check()
-
-        self._array.sort()
-
-        for num in self._array:
-            self.sum += num
-
-        counter = 0
-
-        for card in self._card_list:
-            if card.sum != self.sum:
-                counter += 1
-            else:
-                return
-
-        if counter == len(self._card_list): self._card_list.append(self)
-        else: self.__init__()
-
+        self._array = self.create_array()
         self.__sort()
 
+    def create_array(self):
+        array = []
 
-    def __append_num_check(self):
+        while len(array) < 15:
+            num = random.randrange(1, 91, 1)
+            if self.generate_num(array, num) is True:
+                array.append(num)
+
+        array.sort()
+
+        return array
+
+    def generate_num(self, array, num):
         num_checker = []
-        for number in self._array:
+
+        if array.count(num) != 0:
+            return False
+
+        for number in array:
             if number == 90: num_checker.append(8)
             else: num_checker.append(number // 10)
 
         for i in num_checker:
-            if num_checker.count(i) > 3:
-                self._array.pop()
-                return
+            if num_checker.count(i) >= 3:
+                array.pop()
+                return False
+
+        return True
 
     def __sort(self):
-        sorted_card = []
+        """make pretty card 3x9 from array"""
         columns = 9
-        for i in range(0,columns):
+        sorted_card = []
+
+        for column in range(columns):
             column_arr = []
             for number in self._array:
-                if i*10 <= number < (i+1)*10:
+                # sort by tens
+                if column*10 <= number < (column+1)*10:
                     column_arr.append(number)
 
-            while len(column_arr)<3:
+            while len(column_arr) < 3:
+                # fill with zero Nulls
                 column_arr.append(0)
 
             for i in range(0,3):
+                # randomize numbers in column
                 number = column_arr.pop(random.randrange(0,3,1))
                 column_arr.append(number)
 
             sorted_card.append(column_arr)
 
         for i in range(0,3):
-            self.real_card.append([])
+            # create 3 lines
+            self.pretty_card.append([])
 
         for card in sorted_card:
+            # fill 3 lines
             for i, number in enumerate(card):
-                self.real_card[i].append(number)
+                self.pretty_card[i].append(number)
 
     def get_array(self):
         return self._array
@@ -115,7 +106,7 @@ class Card():
             array.remove(num)
 
         change_array(self._array)
-        for line in self.real_card:
+        for line in self.pretty_card:
             if line.count(num):
                 change_array(line)
 
@@ -123,7 +114,7 @@ class Card():
 
     def __repr__(self):
         pretty_card = ''
-        for card in self.real_card:
+        for card in self.pretty_card:
             for number in card:
                 pretty_card += f'{number}\t'
 
@@ -132,9 +123,9 @@ class Card():
         return pretty_card
 
 
-class Game():
-    '''
-    '''
+class Game:
+    """
+    """
     def __init__(self):
         self.round = 0
         self._used_kegs = []
@@ -220,7 +211,7 @@ class Game():
         return f'round {self.round}'
 
 
-class Player():
+class Player:
     def __init__(self):
         self.name = self.set_player_name()
         self.is_human = self.set_is_human_flag()
@@ -237,7 +228,7 @@ class Player():
                 return name
 
         print('This name already exist. Try again')
-        return self.player_name()
+        return self.set_player_name()
 
     def set_is_human_flag(self):
         message = f'is player {self.name} human? answer "y" if yes or "n" if no'
@@ -246,6 +237,7 @@ class Player():
 
     def __repr__(self):
         return self.name
+
 
 def main():
     players_number = game.input_players_number()
